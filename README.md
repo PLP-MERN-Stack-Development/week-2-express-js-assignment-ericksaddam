@@ -37,27 +37,76 @@ You will:
 - npm or yarn
 - Postman, Insomnia, or curl for API testing
 
+# Product API
+
+## How to Run
+
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Copy `.env.example` to `.env` and set your API key:
+   ```bash
+   cp .env.example .env
+   # Edit .env and set API_KEY
+   ```
+3. Start the server:
+   ```bash
+   node server.js
+   ```
+
+Server runs on http://localhost:3000
+
+## API Documentation with Swagger
+
+This project includes interactive API documentation using Swagger UI.
+
+- After starting the server, visit: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+- You can view and test all endpoints directly from the browser.
+
 ## API Endpoints
 
-The API will have the following endpoints:
+### Authentication
+All protected routes require an `x-api-key` header with the correct API key.
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+### Products CRUD
+- `GET /api/products` — List products (supports `category`, `search`, `page`, `limit` query params)
+- `GET /api/products/:id` — Get product by ID
+- `POST /api/products` — Create product (protected, requires JSON body)
+- `PUT /api/products/:id` — Update product (protected, requires JSON body)
+- `DELETE /api/products/:id` — Delete product (protected)
 
-## Submission
+#### Example Product JSON
+```json
+{
+  "name": "Laptop",
+  "description": "High-performance laptop",
+  "price": 1200,
+  "category": "electronics",
+  "inStock": true
+}
+```
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+### Advanced Features
+- `GET /api/products?category=electronics` — Filter by category
+- `GET /api/products?search=laptop` — Search by name
+- `GET /api/products?page=2&limit=5` — Pagination
+- `GET /api/products-stats` — Product statistics (count by category)
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+### Error Responses
+Errors return JSON with an `error` field and appropriate HTTP status code.
 
-## Resources
+## Example Requests
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+**Create Product:**
+```bash
+curl -X POST http://localhost:3000/api/products \
+  -H 'Content-Type: application/json' \
+  -H 'x-api-key: <your_api_key>' \
+  -d '{"name":"Tablet","description":"Android tablet","price":300,"category":"electronics","inStock":true}'
+```
+
+**Get Products:**
+```bash
+curl http://localhost:3000/api/products
+```
